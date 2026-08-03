@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>القرآن الكريم - محمد صديق المنشاوي</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts for Arabic Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                        amiri: ['Amiri', 'serif'],
+                    },
+                    colors: {
+                        emeraldCustom: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                            950: '#022c22'
+                        },
+                        amberGold: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #022c22 0%, #064e3b 50%, #0f172a 100%);
+            min-height: 100vh;
+        }
+
+        /* Custom styling for audio seek range bar */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        /* Track styling */
+        input[type="range"]::-webkit-slider-runnable-track {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 9999px;
+            height: 8px;
+        }
+
+        input[type="range"]::-moz-range-track {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 9999px;
+            height: 8px;
+        }
+
+        /* Thumb styling */
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            margin-top: -5px;
+            background-color: #fbbf24;
+            height: 18px;
+            width: 18px;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(251, 191, 36, 0.6);
+            transition: transform 0.1s ease, background-color 0.1s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            background-color: #f59e0b;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            border: none;
+            background-color: #fbbf24;
+            height: 18px;
+            width: 18px;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(251, 191, 36, 0.6);
+            transition: transform 0.1s ease, background-color 0.1s ease;
+        }
+
+        input[type="range"]::-moz-range-thumb:hover {
+            transform: scale(1.2);
+            background-color: #f59e0b;
+        }
+
+        /* Audio Wave animation */
+        .bar {
+            display: inline-block;
+            width: 4px;
+            height: 18px;
+            background-color: #fbbf24;
+            border-radius: 2px;
+            animation: bounce 1.2s ease-in-out infinite;
+        }
+
+        .bar:nth-child(2) { animation-delay: 0.2s; }
+        .bar:nth-child(3) { animation-delay: 0.4s; }
+        .bar:nth-child(4) { animation-delay: 0.6s; }
+
+        @keyframes bounce {
+            0%, 100% { transform: scaleY(0.3); }
+            50% { transform: scaleY(1); }
+        }
+
+        .paused .bar {
+            animation-play-state: paused;
+            transform: scaleY(0.3);
+        }
+    </style>
+</head>
+<body class="text-slate-100 flex flex-col justify-between items-center p-4 sm:p-6 min-h-screen">
+
+    <div class="w-full max-w-md mx-auto flex-1 flex flex-col justify-center my-auto">
+        
+        <!-- Header & Reciter Title -->
+        <header class="text-center mb-6 pt-2">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-900/60 border border-emerald-500/30 text-emerald-300 text-xs font-semibold mb-3 shadow-sm backdrop-blur-sm">
+                <i class="fa-solid font-amiri text-amberGold-400">📖</i>
+                <span>القرآن الكريم - المصحف المرتل</span>
+            </div>
+            
+            <h1 class="text-2xl sm:text-3xl font-bold font-amiri text-amberGold-400 tracking-wide mb-1 drop-shadow">
+                محمد صديق المنشاوي
+            </h1>
+            <p class="text-xs text-emerald-200/80 font-medium">برواية حفص عن عاصم</p>
+        </header>
+
+        <!-- Main Card Container -->
+        <main class="bg-slate-900/80 backdrop-blur-md border border-emerald-500/20 rounded-3xl p-6 shadow-2xl relative overflow-hidden">
+            <!-- Subtle Decorative Islamic Pattern Background -->
+            <div class="absolute inset-0 opacity-5 pointer-events-none bg-[radial-gradient(#fbbf24_1px,transparent_1px)] [background-size:16px_16px]"></div>
+
+            <!-- Combo Box Selection (Near top of player) -->
+            <div class="mb-6 relative z-10">
+                <label for="surahSelect" class="block text-xs font-semibold text-emerald-300 mb-2 mr-1 flex items-center justify-between">
+                    <span>اختر السورة:</span>
+                    <span id="surahCounter" class="text-[10px] text-emerald-400/70 font-mono">114/1</span>
+                </label>
+                <div class="relative">
+                    <select id="surahSelect" class="w-full bg-slate-800/90 text-slate-100 border border-emerald-600/40 rounded-xl px-4 py-3 text-sm sm:text-base font-semibold focus:outline-none focus:border-amberGold-500 focus:ring-2 focus:ring-amberGold-500/30 appearance-none transition-all duration-200 cursor-pointer shadow-inner pr-4 pl-10">
+                        <option value="" disabled selected>جاري تحميل السور...</option>
+                    </select>
+                    <div class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-amberGold-400">
+                        <i class="fa-solid fa-chevron-down text-sm"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Selected Surah Display & Visualizer Status -->
+            <div class="text-center my-6 relative z-10">
+                <div id="visualizer" class="flex items-center justify-center gap-1.5 h-6 mb-3 paused">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+                <h2 id="currentSurahTitle" class="text-xl sm:text-2xl font-bold text-white font-amiri mb-1 min-h-[36px] flex items-center justify-center">
+                    سورة الفاتحة
+                </h2>
+                <p id="statusText" class="text-xs text-emerald-300/70">جاهز للتشغيل</p>
+            </div>
+
+            <!-- Hidden Audio Element -->
+            <audio id="audioPlayer" preload="metadata"></audio>
+
+            <!-- Seek Bar Container -->
+            <div class="mb-6 relative z-10">
+                <div class="relative flex items-center mb-2">
+                    <input type="range" id="seekBar" min="0" max="100" value="0" step="0.1" class="w-full h-2 rounded-lg cursor-pointer accent-amberGold-400" aria-label="مؤشر تقدم التلاوة">
+                </div>
+                <div class="flex justify-between items-center text-xs font-mono text-emerald-200/80 px-1 dir-ltr">
+                    <span id="currentTime">00:00</span>
+                    <span id="durationTime">00:00</span>
+                </div>
+            </div>
+
+            <!-- Controls Container -->
+            <div class="flex items-center justify-center gap-6 relative z-10 pt-2">
+                <!-- Previous Surah Button -->
+                <button id="prevBtn" class="w-11 h-11 rounded-full bg-slate-800 text-slate-300 hover:text-amberGold-400 hover:bg-slate-700/80 flex items-center justify-center transition-all duration-200 border border-slate-700 active:scale-95 shadow-md" title="السورة السابقة" aria-label="السورة السابقة">
+                    <i class="fa-solid fa-forward-step text-base"></i>
+                </button>
+
+                <!-- Play/Pause Primary Button -->
+                <button id="playPauseBtn" class="w-16 h-16 rounded-full bg-gradient-to-tr from-amberGold-600 to-amberGold-400 text-slate-950 flex items-center justify-center text-2xl shadow-lg shadow-amberGold-500/20 hover:scale-105 active:scale-95 transition-all duration-200 focus:outline-none" title="تشغيل / إيقاف مؤقت" aria-label="تشغيل / إيقاف">
+                    <i id="playIcon" class="fa-solid fa-play ml-1"></i>
+                    <i id="pauseIcon" class="fa-solid fa-pause hidden"></i>
+                </button>
+
+                <!-- Next Surah Button -->
+                <button id="nextBtn" class="w-11 h-11 rounded-full bg-slate-800 text-slate-300 hover:text-amberGold-400 hover:bg-slate-700/80 flex items-center justify-center transition-all duration-200 border border-slate-700 active:scale-95 shadow-md" title="السورة التالية" aria-label="السورة التالية">
+                    <i class="fa-solid fa-backward-step text-base"></i>
+                </button>
+            </div>
+
+        </main>
+
+        <!-- Footer Info -->
+        <footer class="text-center mt-6 text-xs text-emerald-300/50">
+            <p>الرواية: حفص عن عاصم | التسجيل المرتل</p>
+        </footer>
+
+    </div>
+
+    <script>
+        // Base URL for audio files
+        const BASE_URL = "https://archive.org/download/minshawi-new-murattal/";
+
+        // Standard 114 Surah Arabic Names (Fallback & Initial Structure)
+        const DEFAULT_SURAH_NAMES = [
+            "الفاتحة", "البقرة", "آل عمران", "النساء", "المائدة", "الأنعام", "الأعراف", "الأنفال", "التوبة", "يونس",
+            "هود", "يوسف", "الرعد", "إبراهيم", "الحجر", "النحل", "الإسراء", "الكهف", "مريم", "طه",
+            "الأننبياء", "الحج", "المؤمنون", "النور", "الفرقان", "الشعراء", "النمل", "القصص", "العنكبوت", "الروم",
+            "لقمان", "السجدة", "الأحزاب", "سبأ", "فاطر", "يس", "الصافات", "ص", "الزمر", "غافر",
+            "فصلت", "الشورى", "الزخرف", "الدخان", "الجاثية", "الأحقاف", "محمد", "الفتح", "الحجرات", "ق",
+            "الذاريات", "الطور", "النجم", "القمر", "الرحمن", "الواقعة", "الحديد", "المجادلة", "الحشر", "الممتحنة",
+            "الصف", "الجمعة", "المنافقون", "التغابن", "الطلاق", "التحريم", "الملك", "القلم", "الحاقة", "المعارج",
+            "نوح", "الجن", "المزمل", "المدثر", "القيامة", "الإنسان", "المرسلات", "النبأ", "النازعات", "عبس",
+            "التكوير", "الانفطار", "المطففين", "الانشقاق", "البروج", "الطارق", "الأعلى", "الغاشية", "الفجر", "البلد",
+            "الشمس", "الليل", "الضحى", "الشرح", "التين", "العلق", "القدر", "البينة", "الزلزلة", "العاديات",
+            "القارعة", "التكاثر", "العصر", "الهمزة", "الفيل", "قريش", "الماعون", "الكوثر", "الكافرون", "النصر",
+            "المسد", "الإخلاص", "الفلق", "الناس"
+        ];
+
+        // Standard 3-digit audio file URL fallbacks
+        const DEFAULT_URLS = Array.from({ length: 114 }, (_, i) => {
+            const num = String(i + 1).padStart(3, '0');
+            return `${num}.mp3`;
+        });
+
+        // DOM Elements
+        const surahSelect = document.getElementById('surahSelect');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const playIcon = document.getElementById('playIcon');
+        const pauseIcon = document.getElementById('pauseIcon');
+        const seekBar = document.getElementById('seekBar');
+        const currentTimeEl = document.getElementById('currentTime');
+        const durationTimeEl = document.getElementById('durationTime');
+        const currentSurahTitle = document.getElementById('currentSurahTitle');
+        const statusText = document.getElementById('statusText');
+        const visualizer = document.getElementById('visualizer');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const surahCounter = document.getElementById('surahCounter');
+
+        let surahNamesList = [...DEFAULT_SURAH_NAMES];
+        let surahUrlsList = [...DEFAULT_URLS];
+        let isSeeking = false;
+
+        // Helper: Format seconds to MM:SS
+        function formatTime(seconds) {
+            if (isNaN(seconds) || seconds === Infinity) return "00:00";
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        async function loadSurahData() {
+            try {
+                // Try fetching CN.txt and URL.txt from current directory
+                const [cnRes, urlRes] = await Promise.all([
+                    fetch('CN.txt'),
+                    fetch('URL.txt')
+                ]);
+
+                if (cnRes.ok && urlRes.ok) {
+                    const cnText = await cnRes.text();
+                    const urlText = await urlRes.text();
+
+                    const parsedNames = cnText.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+                    const parsedUrls = urlText.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+
+                    if (parsedNames.length > 0 && parsedUrls.length > 0) {
+                        surahNamesList = parsedNames;
+                        surahUrlsList = parsedUrls;
+                    }
+                }
+            } catch (err) {
+                console.log("استخدام البيانات الافتراضية:", err);
+            } finally {
+                populateCombo();
+            }
+        }
+
+        function populateCombo() {
+            surahSelect.innerHTML = '';
+            
+            surahNamesList.forEach((name, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                const surahNum = String(index + 1).padStart(3, '0');
+                option.textContent = `${surahNum}. سورة ${name}`;
+                surahSelect.appendChild(option);
+            });
+
+            // Set initial selected surah (Surah Al-Fatiha - index 0)
+            selectSurah(0, false);
+        }
+
+        // Select and load Surah
+        function selectSurah(index, autoPlay = true) {
+            if (index < 0 || index >= surahNamesList.length) return;
+
+            surahSelect.value = index;
+            const surahName = surahNamesList[index];
+            const rawUrl = surahUrlsList[index] || DEFAULT_URLS[index];
+            const fullUrl = BASE_URL + rawUrl;
+
+            currentSurahTitle.textContent = `سورة ${surahName}`;
+            surahCounter.textContent = `${index + 1} / ${surahNamesList.length}`;
+            statusText.textContent = "جاري التحميل...";
+
+            audioPlayer.src = fullUrl;
+            audioPlayer.load();
+
+            // Reset UI seek state
+            seekBar.value = 0;
+            currentTimeEl.textContent = "00:00";
+            durationTimeEl.textContent = "00:00";
+
+            if (autoPlay) {
+                audioPlayer.play().then(() => {
+                    updatePlayStateUI(true);
+                    statusText.textContent = "جاري التشغيل";
+                }).catch(error => {
+                    console.error("Playback failed:", error);
+                    updatePlayStateUI(false);
+                    statusText.textContent = "اضغط تشغيل للبدء";
+                });
+            } else {
+                updatePlayStateUI(false);
+                statusText.textContent = "جاهز للتشغيل";
+            }
+        }
+
+        function updatePlayStateUI(isPlaying) {
+            if (isPlaying) {
+                playIcon.classList.add('hidden');
+                pauseIcon.classList.remove('hidden');
+                visualizer.classList.remove('paused');
+            } else {
+                playIcon.classList.remove('hidden');
+                pauseIcon.classList.add('hidden');
+                visualizer.classList.add('paused');
+            }
+        }
+
+        // Toggle Play / Pause
+        function togglePlayPause() {
+            if (!audioPlayer.src) {
+                selectSurah(0, true);
+                return;
+            }
+
+            if (audioPlayer.paused) {
+                audioPlayer.play().then(() => {
+                    updatePlayStateUI(true);
+                    statusText.textContent = "جاري التشغيل";
+                }).catch(err => {
+                    console.error("Playback error:", err);
+                });
+            } else {
+                audioPlayer.pause();
+                updatePlayStateUI(false);
+                statusText.textContent = "متوقف مؤقتاً";
+            }
+        }
+
+        // Event Listeners
+        playPauseBtn.addEventListener('click', togglePlayPause);
+
+        surahSelect.addEventListener('change', (e) => {
+            const index = parseInt(e.target.value, 10);
+            selectSurah(index, true);
+        });
+
+        // Navigation Buttons
+        prevBtn.addEventListener('click', () => {
+            const currentIndex = parseInt(surahSelect.value, 10) || 0;
+            if (currentIndex > 0) {
+                selectSurah(currentIndex - 1, true);
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            const currentIndex = parseInt(surahSelect.value, 10) || 0;
+            if (currentIndex < surahNamesList.length - 1) {
+                selectSurah(currentIndex + 1, true);
+            }
+        });
+
+        // Audio Time Update
+        audioPlayer.addEventListener('timeupdate', () => {
+            if (!isSeeking && audioPlayer.duration) {
+                const percentage = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                seekBar.value = percentage;
+                currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
+            }
+        });
+
+        // Loaded Metadata
+        audioPlayer.addEventListener('loadedmetadata', () => {
+            durationTimeEl.textContent = formatTime(audioPlayer.duration);
+        });
+
+        // Audio Ended -> Auto Play Next Surah
+        audioPlayer.addEventListener('ended', () => {
+            const currentIndex = parseInt(surahSelect.value, 10) || 0;
+            if (currentIndex < surahNamesList.length - 1) {
+                selectSurah(currentIndex + 1, true);
+            } else {
+                updatePlayStateUI(false);
+                statusText.textContent = "اكتملت التلاوة";
+            }
+        });
+
+        // Audio Waiting / Buffering
+        audioPlayer.addEventListener('waiting', () => {
+            statusText.textContent = "جاري التحميل...";
+        });
+
+        audioPlayer.addEventListener('playing', () => {
+            statusText.textContent = "جاري التشغيل";
+            updatePlayStateUI(true);
+        });
+
+        audioPlayer.addEventListener('pause', () => {
+            updatePlayStateUI(false);
+        });
+
+        // Seek bar interaction
+        seekBar.addEventListener('input', () => {
+            isSeeking = true;
+            if (audioPlayer.duration) {
+                const seekTime = (seekBar.value / 100) * audioPlayer.duration;
+                currentTimeEl.textContent = formatTime(seekTime);
+            }
+        });
+
+        seekBar.addEventListener('change', () => {
+            if (audioPlayer.duration) {
+                audioPlayer.currentTime = (seekBar.value / 100) * audioPlayer.duration;
+            }
+            isSeeking = false;
+        });
+
+        // Keyboard navigation (Space bar for play/pause)
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'SELECT' || e.target.tagName === 'INPUT') return;
+            if (e.code === 'Space') {
+                e.preventDefault();
+                togglePlayPause();
+            }
+        });
+
+        // Initial Load on page ready
+        window.onload = function () {
+            loadSurahData();
+        };
+    </script>
+</body>
+</html>
